@@ -48,6 +48,16 @@ class ProductForm extends \mdg\combinationduplicate\Forms\ObjectForm
                 'locales' => $this->locales,
                 'label' => $this->module->l('Add a suffix', $this->form_name),
             ])
+            ->add('replace_from', TranslateType::class, [
+                'type' => TextType::class,
+                'locales' => $this->locales,
+                'label' => $this->module->l('Replace part of the name', $this->form_name),
+            ])
+            ->add('replace_to', TranslateType::class, [
+                'type' => TextType::class,
+                'locales' => $this->locales,
+                'label' => $this->module->l('With this', $this->form_name),
+            ])
             ->add('quantity', IntegerType::class, [
                 'label' => $this->module->l('Quantity by package', $this->form_name),
             ])

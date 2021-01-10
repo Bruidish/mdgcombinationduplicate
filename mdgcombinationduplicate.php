@@ -23,7 +23,7 @@ class mdgcombinationduplicate extends \Module
     {
         $this->name = 'mdgcombinationduplicate';
         $this->tab = 'administration';
-        $this->version = '0.0.1';
+        $this->version = '1.0.0';
         $this->author = 'Michel Dumont';
         $this->need_instance = 0;
         $this->bootstrap = 1;

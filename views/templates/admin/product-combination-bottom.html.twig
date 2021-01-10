@@ -34,6 +34,18 @@
 </div>
 <div class="row">
     <fieldset class="col-md-4 form-group">
+        {{ form_label(form.replace_from) }}
+        {{ form_widget(form.replace_from) }}
+        {{ form_errors(form.replace_from) }}
+    </fieldset>
+    <fieldset class="col-md-4 form-group">
+        {{ form_label(form.replace_to) }}
+        {{ form_widget(form.replace_to) }}
+        {{ form_errors(form.replace_to) }}
+    </fieldset>
+</div>
+<div class="row">
+    <fieldset class="col-md-4 form-group">
         {{ form_label(form.prefix) }}
         {{ form_widget(form.prefix) }}
         {{ form_errors(form.prefix) }}

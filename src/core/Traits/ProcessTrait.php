@@ -76,12 +76,14 @@ trait ProcessTrait
      * @param int id_produit
      * @param string prefixe à ajouter aux valeurs des déclinaisons
      * @param string sufixe à ajouter aux valeurs des déclinaisons
+     * @param string terme à remplacer
+     * @param string terme de remplacement
      * @param int quantité du lot
      * @param float coeffichient à apliquer au prix
      *
      * @return boolean
      */
-    public function duplicateCombinationsByProduct($idProduct, $prefix, $suffix, $quantity, $priceMultiplicator)
+    public function duplicateCombinationsByProduct($idProduct, $prefix, $suffix, $replace_from, $replace_to, $quantity, $priceMultiplicator)
     {
         $output = true;
 
@@ -107,7 +109,7 @@ trait ProcessTrait
         $dataCombinations = \Db::getInstance()->executes($sqlCombinations);
         if ($dataCombinations) {
             foreach ($dataCombinations as $rowCombination) {
-                $output &= $this->_dupplicateCombination($idProduct, $rowCombination['id_product_attribute'], $prefix, $suffix, $quantity, $priceMultiplicator);
+                $output &= $this->_dupplicateCombination($idProduct, $rowCombination['id_product_attribute'], $prefix, $suffix, $replace_from, $replace_to, $quantity, $priceMultiplicator);
             }
         }
 
@@ -121,12 +123,14 @@ trait ProcessTrait
      * @param int id de la déclinaison à dupliquer
      * @param string prefixe à ajouter aux valeurs des déclinaisons
      * @param string sufixe à ajouter aux valeurs des déclinaisons
+     * @param string terme à remplacer
+     * @param string terme de remplacement
      * @param int quantité du lot
      * @param float coeffichient à apliquer au prix
      *
      * @return boolean
      */
-    private function _dupplicateCombination($idProduct, $idProductAttribute, $prefix = null, $suffix = null, $quantity = null, $priceMultiplicator = null)
+    private function _dupplicateCombination($idProduct, $idProductAttribute, $prefix = null, $suffix = null, $replace_from = null, $replace_to = null, $quantity = null, $priceMultiplicator = null)
     {
         $output = true;
 
@@ -153,6 +157,8 @@ trait ProcessTrait
             if ($dataAttributes) {
                 $attributesClonedList = [];
                 foreach ($dataAttributes as $rowAttribute) {
+                    $rowAttribute['name'] = str_replace($replace_from, $replace_to, $rowAttribute['name']);
+
                     // Vérifie si l'attribut existe dans la langue par défaut avec préfixes et suffixes
                     $idAttributeCloned = \Db::getInstance()->getValue(
                         (new \DbQuery)

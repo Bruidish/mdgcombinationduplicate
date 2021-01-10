@@ -21,11 +21,17 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
     /** @var bool Le fonctionnel est actif/inactif sur le produit */
     public $active;
 
-    /** @var string terme du nom de la déclinaison à remplacer */
+    /** @var string préfix à ajouter au titre de la déclinaison */
     public $prefix;
 
-    /** @var string terme de remplacement du nom de la déclinaison */
+    /** @var string suffix à ajouter au titre de la déclinaison */
     public $suffix;
+
+    /** @var string terme à remplacer dans le titre de la déclinaison */
+    public $replace_from;
+
+    /** @var string terme de remplacement */
+    public $replace_to;
 
     /** @var int nombre d'unité pour chaque lot */
     public $quantity;
@@ -43,6 +49,8 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'prefix' => ['type' => self::TYPE_STRING, 'lang' => true],
             'suffix' => ['type' => self::TYPE_STRING, 'lang' => true],
+            'replace_from' => ['type' => self::TYPE_STRING, 'lang' => true],
+            'replace_to' => ['type' => self::TYPE_STRING, 'lang' => true],
             'quantity' => ['type' => self::TYPE_INT],
             'price_multiplicator' => ['type' => self::TYPE_FLOAT],
         ],
@@ -54,11 +62,11 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
      *
      * @return self
      */
-    public static function getInstanceByIdObject($idObject)
+    public static function getInstanceByIdObject($idObject, $force = true)
     {
         $id = \Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue("SELECT " . static::$definition['primary'] . " FROM " . _DB_PREFIX_ . static::$definition['table'] . " WHERE id_object={$idObject}");
 
-        if (!$id) {
+        if (!$id && $force) {
             $that = new self();
             $that->id_object = $idObject;
             $that->add();
@@ -66,5 +74,18 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
         }
 
         return new self($id);
+    }
+
+    /**
+     * Instancie cette classe à l'objet Prestashop associé
+     *
+     * @param int id de l'object associé
+     *
+     * @return self|false
+     */
+    public static function getExistsInstanceByIdObject($idObject)
+    {
+        $output = static::getInstanceByIdObject($idObject, false);
+        return $output->id ? $output : false;
     }
 }

@@ -8,6 +8,7 @@
         "actionObjectCombinationUpdateAfter",
         "actionObjectCombinationDeleteAfter",
 
+        "displayOverrideTemplate",
         "actionFrontControllerSetMedia",
         "actionValidateOrder"
     ],

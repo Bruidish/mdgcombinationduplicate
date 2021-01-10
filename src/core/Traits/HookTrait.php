@@ -36,27 +36,53 @@ trait HookTrait
      */
     public function hookActionValidateOrder($params)
     {
-        if ($params['orderStatus']->logable) {
-            $this->stockDownMainCombinations($params['order']->id);
-        }
+        $this->stockDownMainCombinations($params['order']->id);
     }
 
     /**
-     * Si une commande prend le status payé
-     *
+     * Surcouche la template des déclinaisons pour affihcer les lots dans un second espace
      * @inheritdoc
      */
-    public function hookActionOrderStatusPostUpdate($params)
+    public function hookDisplayOverrideTemplate(array $params)
     {
-        if (
-            !empty($params['newOrderStatus']) &&
-            in_array($params['newOrderStatus']->id, [
-                \Configuration::get('PS_OS_WS_PAYMENT'),
-                \Configuration::get('PS_OS_PAYMENT'),
-                \Configuration::get('PS_OS_PAYPAL'),
-                \Configuration::get('PAYPLUG_ORDER_STATE_PAID'),
-            ])) {
-            $this->stockDownMainCombinations($params['id_order']);
+        if ($params['controller']->php_self == 'product') {
+            $idProduct = \Tools::getValue('id_product');
+            $productSettings = ProductModel::getExistsInstanceByIdObject($idProduct);
+
+            // Si le produit possède une régle de déclinaisons dupliquées
+            if ($productSettings && $productSettings->active) {
+                $combinationsDuplicatedIdsAttributes = [];
+                $sqlCombinationsDuplicatedIdsAttributes = \Db::getInstance()->executes(
+                    (new \DbQuery)
+                        ->select("id_attribute")
+                        ->from("product_attribute_combination")
+                        ->where("id_product_attribute IN(" .
+                            (new \DbQuery)
+                                ->select("id_object")
+                                ->from(CombinationModel::$definition['table'])
+                                ->where("id_product = {$idProduct}")
+                                ->build()
+                            . ")")
+                        ->build()
+                );
+                if ($sqlCombinationsDuplicatedIdsAttributes) {
+                    foreach ($sqlCombinationsDuplicatedIdsAttributes as $rowCombinationsDuplicatedIdsAttributes) {
+                        $combinationsDuplicatedIdsAttributes[] = $rowCombinationsDuplicatedIdsAttributes['id_attribute'];
+                    }
+
+                    $this->context->smarty->assign([
+                        "combinationDuplicatedSettings" => $productSettings,
+                        "combinationsDuplicatedIdsAttributes" => $combinationsDuplicatedIdsAttributes,
+                    ]);
+
+                    switch ($params['template_file']) {
+                        case 'catalog/product':
+                            return "module:{$this->name}/views/templates/override/product.tpl";
+                        case 'catalog/_partials/product-variants':
+                            return "module:{$this->name}/views/templates/override/product-variants.tpl";
+                    }
+                }
+            }
         }
     }
 
@@ -96,7 +122,7 @@ trait HookTrait
 
         $output &= $productForm->processForm(\Tools::getValue($this->name));
         if ($productForm->object->active) {
-            $output &= $this->duplicateCombinationsByProduct($productId, $productForm->object->prefix, $productForm->object->suffix, $productForm->object->quantity, $productForm->object->price_multiplicator);
+            $output &= $this->duplicateCombinationsByProduct($productId, $productForm->object->prefix, $productForm->object->suffix, $productForm->object->replace_from, $productForm->object->replace_to, $productForm->object->quantity, $productForm->object->price_multiplicator);
             $output &= $this->stockFullDuplicatedCombinations($productId);
         }
 
