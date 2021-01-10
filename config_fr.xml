@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>mdgcombinationduplicate</name>
+    <displayName><![CDATA[(mdg) Duplication des combinaisons]]></displayName>
+    <version><![CDATA[0.0.1]]></version>
+    <description><![CDATA[Dupliquez vos d&eacute;clinaisons avec des conditionnements diff&eacute;rents.]]></description>
+    <author><![CDATA[Michel Dumont]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <is_configurable>0</is_configurable>
+    <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

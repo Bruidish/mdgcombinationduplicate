@@ -1,0 +1,48 @@
+{##
+# @author:  Michel Dumont <michel.dumont.io>
+# @version: 1.0.0 - 2021-01-08
+# @license: http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+# @package: prestashop 1.7
+#}
+
+<div class="row">
+    <fieldset class="col-md-8 form-group">
+        <h2>Duplication des déclinaisons</h2>
+        <p class="subtitle">Utilisez ce formulaire pour paramétrer la duplication automatique de vos déclinaisons.<br>Les déclinaisons n'apparaitront qu'une fois la page rechargée.</p>
+    </fieldset>
+</div>
+<div class="row">
+    <fieldset class="col-md-8 form-group">
+        {{ form_label(form.active) }}
+        {{ form_widget(form.active) }}
+        {{ form_errors(form.active) }}
+    </fieldset>
+</div>
+<div class="row">
+    <fieldset class="col-md-4 form-group">
+        {{ form_label(form.price_multiplicator) }}
+        {{ form_widget(form.price_multiplicator) }}
+        {{ form_errors(form.price_multiplicator) }}
+        <small class="form-text">Coefficent multiplicateur à appliquer au prix de la déclinaison de référence</small>
+    </fieldset>
+    <fieldset class="col-md-4 form-group">
+        {{ form_label(form.quantity) }}
+        {{ form_widget(form.quantity) }}
+        {{ form_errors(form.quantity) }}
+        <small class="form-text">Quantité à destocker sur la délinaison de référence</small>
+    </fieldset>
+</div>
+<div class="row">
+    <fieldset class="col-md-4 form-group">
+        {{ form_label(form.prefix) }}
+        {{ form_widget(form.prefix) }}
+        {{ form_errors(form.prefix) }}
+    </fieldset>
+    <fieldset class="col-md-4 form-group">
+        {{ form_label(form.suffix) }}
+        {{ form_widget(form.suffix) }}
+        {{ form_errors(form.suffix) }}
+    </fieldset>
+</div>
+    {{ form_errors(form) }}
+{{ form_widget(form) }}

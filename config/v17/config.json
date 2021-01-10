@@ -1,0 +1,27 @@
+{
+    "hooks": [
+        "displayAdminProductsOptionsStepBottom",
+        "actionObjectProductAddAfter",
+        "actionObjectProductUpdateAfter",
+        "actionObjectProductDeleteAfter",
+        "actionObjectCombinationAddAfter",
+        "actionObjectCombinationUpdateAfter",
+        "actionObjectCombinationDeleteAfter",
+
+        "actionFrontControllerSetMedia",
+        "actionValidateOrder"
+    ],
+
+    "tabs": [
+
+    ],
+
+    "models": [
+        {"className": "mdg\\combinationduplicate\\Models\\ProductModel", "removeOnUninstall": true},
+        {"className": "mdg\\combinationduplicate\\Models\\CombinationModel", "removeOnUninstall": true}
+    ],
+
+    "fields": [
+
+    ]
+}
