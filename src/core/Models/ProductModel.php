@@ -59,6 +59,7 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
     /** Instancie cette classe à l'objet Prestashop associé
      *
      * @param int id de l'object associé
+     * @param bool force la création d'une ligne en base de donnée
      *
      * @return self
      */
@@ -87,5 +88,22 @@ class ProductModel extends \mdg\combinationduplicate\Models\ObjectModel
     {
         $output = static::getInstanceByIdObject($idObject, false);
         return $output->id ? $output : false;
+    }
+
+    /** Retourne si un objet Prestashop est assoicé et est actif
+     *
+     * @param int id de l'object associé
+     *
+     * @return boolean
+     */
+    public static function getIsActiveByIdObject($idObject)
+    {
+        return (bool) \Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            (new \DbQuery)
+                ->select("count(*)")
+                ->from(static::$definition['table'])
+                ->where("id_object={$idObject}")
+                ->build()
+        );
     }
 }

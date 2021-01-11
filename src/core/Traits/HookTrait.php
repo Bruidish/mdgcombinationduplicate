@@ -19,18 +19,26 @@ if (!defined('_PS_VERSION_')) {
 
 trait HookTrait
 {
-    /** Charge les médias en front
+    /**
+     * Charge les médias en front
      * @since PS 1.7
      *
      * @inheritdoc
      */
-    public function hookActionFrontControllerSetMedia()
+    public function hookActionFrontControllerSetMedia($params)
     {
-        $this->context->controller->registerStylesheet("module-{$this->name}-front-css", "modules/{$this->name}/views/css/{$this->name}-front.css");
+        if ($this->context->controller->php_self == 'product') {
+            $idProduct = \Tools::getValue('id_product');
+
+            $this->context->controller->registerStylesheet("module-{$this->name}-front-css", "modules/{$this->name}/views/css/{$this->name}-front.css");
+            $this->context->smarty->assign([
+                'mdgProductHasDuplicatedCombinations' => ProductModel::getIsActiveByIdObject($idProduct),
+            ]);
+        }
     }
 
     /**
-     * Si une commande est payée à la validation
+     * Si une commande est validée
      *
      * @inheritdoc
      */
@@ -41,6 +49,8 @@ trait HookTrait
 
     /**
      * Surcouche la template des déclinaisons pour affihcer les lots dans un second espace
+     * @since PS 1.7
+     *
      * @inheritdoc
      */
     public function hookDisplayOverrideTemplate(array $params)
@@ -89,6 +99,7 @@ trait HookTrait
     #region BO PRODUCT
     /**
      * Génère le formulaire dans la fiche produit
+     * @since PS 1.7
      *
      * @inheritdoc
      */
@@ -134,7 +145,7 @@ trait HookTrait
     }
     public function hookActionObjectProductDeleteAfter($params)
     {
-        (ProductModel::getInstanceByIdObject($params['object']->id))->delete();
+        return (ProductModel::getInstanceByIdObject($params['object']->id))->delete();
     }
     #endregion BO PRODUCT
 
@@ -146,7 +157,7 @@ trait HookTrait
      */
     public function hookActionObjectCombinationDeleteAfter($params)
     {
-        (CombinationModel::getInstanceByIdObject($params['object']->id))->delete();
+        return (CombinationModel::getInstanceByIdObject($params['object']->id))->delete();
     }
     #endregion BO Combination
 
