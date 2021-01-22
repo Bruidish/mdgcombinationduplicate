@@ -18,12 +18,13 @@ class mdgcombinationduplicate extends \Module
     use mdg\combinationduplicate\Traits\DebugTrait;
     use mdg\combinationduplicate\Traits\HookTrait;
     use mdg\combinationduplicate\Traits\ProcessTrait;
+    use mdg\combinationduplicate\Traits\SmartyTrait;
 
     public function __construct()
     {
         $this->name = 'mdgcombinationduplicate';
         $this->tab = 'administration';
-        $this->version = '1.0.1';
+        $this->version = '1.0.2';
         $this->author = 'Michel Dumont';
         $this->need_instance = 0;
         $this->bootstrap = 1;
