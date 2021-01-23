@@ -24,10 +24,14 @@ trait SmartyTrait
      */
     public static function sortByKey($array, $key = 'name')
     {
-        uasort($array, function ($a, $b) use ($key) {
-            return strcmp($a[$key], $b[$key]);
-        });
+        uasort($array, function ($a, $b) use ($key) {return strcasecmp($a[$key], $b[$key]);});
+        uasort($array, function ($a, $b) use ($key) {return (int) $a[$key] <=> (int) $b[$key];});
 
-        return $array;
+        $a = $b = [];
+        foreach ($array as $index => $row) {
+            preg_match('/^[0-9]+/', $row[$key]) ? $a[$index] = $row : $b[$index] = $row;
+        }
+
+        return $a + $b;
     }
 }
